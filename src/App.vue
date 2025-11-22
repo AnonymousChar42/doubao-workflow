@@ -1,13 +1,7 @@
 <template>
-  <div>
-    <HelloWorld />
-  </div>
+  <BatchButton />
 </template>
 
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue';
+import BatchButton from './components/BatchButton.vue';
 </script>
-
-<style scoped>
-
-</style>
