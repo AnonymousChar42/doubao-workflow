@@ -1,25 +1,41 @@
 <template>
   <el-dialog v-model="state.visible" title="工作流" draggable :modal="false">
 
-    <el-form ref="form" :model="state.form" label-width="80px">
-      <ElFormItem label="名称">
-        <ElInput v-model="state.form.name" placeholder="请输入名称"></ElInput>
-      </ElFormItem>
+    <el-form ref="form" :model="state.form" label-width="80px" style="padding-bottom: 20px;">
       <ElFormItem label="公共描述">
         <ElInput v-model="state.form.common" placeholder="请输入描述"></ElInput>
       </ElFormItem>
+      <ElFormItem label="关键词">
+        <el-input v-model="state.keywords" type="textarea" :rows="3" placeholder="请输入关键词，每行对应一条"
+          style="flex: 1; margin-right: 20px;" />
+        <div style="display: flex; flex-direction: column; justify-content: center; gap: 10px;">
+          <el-button @click="addKeywords">插入表格</el-button>
+        </div>
+      </ElFormItem>
     </el-form>
 
+    <div style="margin-bottom: 10px;">
+      <el-button @click="addRow" type="primary">
+        <el-icon><Plus /></el-icon>
+        <span>新增一条</span>
+      </el-button>
+      <el-button @click="clearTable">
+        <el-icon><Delete /></el-icon>
+        <span>清空表格</span>
+      </el-button>
+    </div>
 
     <el-table :data="state.form.list" :border="true">
 
-      <el-table-column label="描述">
+      <el-table-column label="描述" align="center">
         <template #default="{ row }">
           <el-input v-model="row.desc" />
         </template>
       </el-table-column>
-      <el-table-column label="图片">
-
+      <el-table-column label="操作" width="200px" align="center">
+        <template #default="{ $index }">
+          <el-button type="danger" @click="deleteRow($index)">删除</el-button>
+        </template>
       </el-table-column>
     </el-table>
 
@@ -34,29 +50,32 @@ import { reactive } from 'vue'
 import { waitForElement } from '@/util/util'
 import { setReactInputValue } from '@/util/react-util'
 import moment from 'moment'
+import { Plus, Delete } from '@element-plus/icons-vue'
 
 const state = reactive({
   visible: false,
+  // 添加关键词字段
+  keywords: '',
   form: {
-    name: '',
     common: '帮我生成图片：图片风格为「电影写真」，比例 「9:16」',
-    list: [
-      {
-        desc: '秦始皇',
-      },
-      {
-        desc: '屋大维',
-      },
-    ]
+    list: [] as { desc: string }[],
   },
 })
 
-
-
-
-
-
 const sleep = (ms = 500) => new Promise(resolve => setTimeout(resolve, ms))
+
+// 添加关键词到列表的方法
+const addKeywords = () => {
+  if (state.keywords.trim()) {
+    const keywordsArray = state.keywords.split('\n').filter(keyword => keyword.trim() !== '');
+    keywordsArray.forEach(keyword => {
+      state.form.list.push({
+        desc: keyword.trim()
+      });
+    });
+    state.keywords = ''; // 清空输入框
+  }
+}
 
 const start = async () => {
   for (const item of state.form.list) {
@@ -176,8 +195,21 @@ const show = () => {
   state.visible = true
 }
 
+const addRow = () => {
+  state.form.list.push({
+    desc: ''
+  })
+}
+
+const deleteRow = (index: number) => {
+  state.form.list.splice(index, 1)
+}
+
+const clearTable = () => {
+  state.form.list = []
+}
+
 defineExpose({
   show,
 })
-
 </script>

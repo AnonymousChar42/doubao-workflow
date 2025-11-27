@@ -1,5 +1,5 @@
 <template>
-  <el-button @click="handleClick">批量</el-button>
+  <el-button @click="handleClick">批量生成</el-button>
   <WorkflowDialog ref="dialogRef" />
 </template>
 
