@@ -24,9 +24,13 @@ export default defineConfig({
     monkey({
       entry: 'src/main.ts',
       userscript: {
-        icon: 'https://vitejs.dev/logo.svg',
+        icon: 'https://www.google.com/s2/favicons?sz=64&domain=doubao.com',
         namespace: 'npm/vite-plugin-monkey',
         match: ['https://www.doubao.com/chat/*'],
+        name: '豆包工作流',
+        description: '这是一个用于批量生成和下载图像的工作流对话框组件，用于自动化执行任务。',
+        updateURL: 'https://anonymouschar42.github.io/doubao-workflow/doubao-workflow.user.js',
+        downloadURL: 'https://anonymouschar42.github.io/doubao-workflow/doubao-workflow.user.js',
       },
       build: {
         externalGlobals: {
