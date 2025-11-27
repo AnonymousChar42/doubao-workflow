@@ -9,18 +9,22 @@
         <el-input v-model="state.keywords" type="textarea" :rows="3" placeholder="请输入关键词，每行对应一条"
           style="flex: 1; margin-right: 20px;" />
         <div style="display: flex; flex-direction: column; justify-content: center; gap: 10px;">
-          <el-button @click="addKeywords">插入表格</el-button>
+          <el-button @click="addKeywords" type="primary">插入表格</el-button>
         </div>
       </ElFormItem>
     </el-form>
 
     <div style="margin-bottom: 10px;">
       <el-button @click="addRow" type="primary">
-        <el-icon><Plus /></el-icon>
+        <el-icon>
+          <Plus />
+        </el-icon>
         <span>新增一条</span>
       </el-button>
       <el-button @click="clearTable">
-        <el-icon><Delete /></el-icon>
+        <el-icon>
+          <Delete />
+        </el-icon>
         <span>清空表格</span>
       </el-button>
     </div>
@@ -40,7 +44,10 @@
     </el-table>
 
     <template #footer>
-      <el-button type="primary" @click="start">确定</el-button>
+      <el-button type="primary" @click="start" :loading="state.running">
+        {{ state.running ? '运行中...' : '确定' }}
+      </el-button>
+      <el-button v-if="state.running" @click="stop" type="danger">停止</el-button>
     </template>
   </el-dialog>
 </template>
@@ -60,6 +67,9 @@ const state = reactive({
     common: '帮我生成图片：图片风格为「电影写真」，比例 「9:16」',
     list: [] as { desc: string }[],
   },
+  // 添加运行状态和停止标志
+  running: false,
+  shouldStop: false
 })
 
 const sleep = (ms = 500) => new Promise(resolve => setTimeout(resolve, ms))
@@ -78,9 +88,30 @@ const addKeywords = () => {
 }
 
 const start = async () => {
-  for (const item of state.form.list) {
-    await startDraw(item.desc)
+  // 关闭弹窗
+  state.visible = false;
+  
+  // 设置运行状态
+  state.running = true;
+  state.shouldStop = false;
+
+  try {
+    for (const item of state.form.list) {
+      // 检查是否需要停止
+      if (state.shouldStop) break;
+
+      await startDraw(item.desc)
+    }
+  } finally {
+    // 重置运行状态
+    state.running = false;
+    state.shouldStop = false;
   }
+}
+
+// 添加停止方法
+const stop = () => {
+  state.shouldStop = true;
 }
 
 const startDraw = async (desc: string) => {
