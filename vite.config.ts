@@ -13,6 +13,9 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src'), // 配置 @ 指向 src 目录
     },
   },
+  build: {
+    outDir: path.resolve(__dirname, 'docs'), // 将输出目录设置为 docs
+  },
   plugins: [
     vue(),
     AutoImport({
