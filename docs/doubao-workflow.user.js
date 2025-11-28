@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name         豆包工作流
 // @namespace    npm/vite-plugin-monkey
-// @version      0.0.0
+// @version      0.0.1
 // @description  这是一个用于批量生成和下载图像的工作流对话框组件，用于自动化执行任务。
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=doubao.com
 // @downloadURL  https://anonymouschar42.github.io/doubao-workflow/doubao-workflow.user.js
 // @updateURL    https://anonymouschar42.github.io/doubao-workflow/doubao-workflow.user.js
 // @match        https://www.doubao.com/chat/*
-// @require      https://cdn.jsdelivr.net/npm/vue@3.5.25/dist/vue.global.prod.js
+// @require      https://registry.npmmirror.com/vue/3.5.25/files/dist/vue.global.prod.js
 // @grant        GM_addStyle
 // ==/UserScript==
 
@@ -21,7 +21,7 @@
     return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
   };
   var require_main_001 = __commonJS({
-    "main-ByTq-8Z1.js"(exports$1, module) {
+    "main-Cm099fna.js"(exports$1, module) {
       const configProviderContextKey = Symbol();
       const defaultNamespace = "el";
       const statePrefix = "is-";
@@ -20232,9 +20232,10 @@ running: false,
             });
             await sleep();
             await waitForElement('[data-testid="chat_input_send_button"]').then((ele) => ele.click());
+            const imgList = await waitForNewImageLoaded();
+            await sleep();
             await changeTitle(desc);
             await sleep();
-            const imgList = await waitForNewImageLoaded();
             for (const thumb of imgList) {
               thumb.click();
               await waitForAttrChange('[data-testid="in_painting_picture"]', (ele) => ele?.getAttribute("src") || "").then((src) => {

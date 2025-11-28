@@ -90,7 +90,7 @@ const addKeywords = () => {
 const start = async () => {
   // 关闭弹窗
   state.visible = false;
-  
+
   // 设置运行状态
   state.running = true;
   state.shouldStop = false;
@@ -129,12 +129,14 @@ const startDraw = async (desc: string) => {
   // 点击发送按钮
   await waitForElement('[data-testid="chat_input_send_button"]').then(ele => ele.click())
 
+  // 获取图片元素
+  const imgList = await waitForNewImageLoaded();
+  await sleep()
+
   // 修改标题
   await changeTitle(desc)
   await sleep()
 
-  // 获取图片元素
-  const imgList = await waitForNewImageLoaded();
   // 点击每一个图片 下载大图
   for (const thumb of imgList) {
     thumb.click()
